@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.github.hm1113"
-version = "1.2.2"
+version = "1.2.3"
 
 android {
     namespace = "com.tubitv.fragmentoperator"
@@ -17,7 +17,6 @@ android {
 
     defaultConfig {
         minSdk = 24
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -29,39 +28,81 @@ android {
 
         release {
             buildConfigField("boolean", "APP_DEBUG", "false")
-
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
 
+// ✅ Add sources & Javadoc tasks
+tasks.register<Jar>("androidSourcesJar") {
+    archiveClassifier.set("sources")
+    from(android.sourceSets["main"].java.srcDirs)
+}
+
+tasks.register<Jar>("androidJavadocJar") {
+    archiveClassifier.set("javadoc")
+}
+
+// ✅ Configure publishing for Android Library
 publishing {
     publications {
         create<MavenPublication>("release") {
-            afterEvaluate { // Ensures all components are available
-                from(components["release"]) // ✅ Use "release" for Android libraries
+            afterEvaluate {
+                from(components["release"]) // Ensures correct artifact
+
+                artifact(tasks["androidSourcesJar"])
+                artifact(tasks["androidJavadocJar"])
+
+                groupId = "com.github.hm1113"
+                artifactId = "FragmentOperator"
+                version = "1.2.3"
+
+                pom {
+                    name.set("FragmentOperator")
+                    description.set("A simple fragment operator library for Android.")
+                    url.set("https://github.com/hm1113/FragmentOperator")
+
+                    licenses {
+                        license {
+                            name.set("MIT License")
+                            url.set("https://opensource.org/licenses/MIT")
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id.set("hm1113")
+                            name.set("Hem")
+                        }
+                    }
+
+                    scm {
+                        connection.set("scm:git:github.com/hm1113/FragmentOperator.git")
+                        developerConnection.set("scm:git:ssh://github.com/hm1113/FragmentOperator.git")
+                        url.set("https://github.com/hm1113/FragmentOperator")
+                    }
+                }
             }
-            groupId = "com.github.hm1113"
-            artifactId = "FragmentOperator"
-            version = "1.2.2"
         }
     }
 }
