@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.github.hm1113"
-version = "1.2.1"
+version = "1.2.2"
 
 android {
     namespace = "com.tubitv.fragmentoperator"
@@ -61,7 +61,7 @@ publishing {
             }
             groupId = "com.github.hm1113"
             artifactId = "FragmentOperator"
-            version = "1.2.1"
+            version = "1.2.2"
         }
     }
 }
