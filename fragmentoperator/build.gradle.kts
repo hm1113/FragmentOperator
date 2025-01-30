@@ -11,6 +11,10 @@ android {
     namespace = "com.tubitv.fragmentoperator"
     compileSdk = 35
 
+    buildFeatures {
+        buildConfig = true // Enable BuildConfig generation
+    }
+
     defaultConfig {
         minSdk = 24
 
@@ -19,7 +23,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("boolean", "APP_DEBUG", "true")
+        }
+
         release {
+            buildConfigField("boolean", "APP_DEBUG", "false")
+
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }

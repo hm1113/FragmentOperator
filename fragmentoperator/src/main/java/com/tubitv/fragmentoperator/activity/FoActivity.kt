@@ -40,9 +40,9 @@ abstract class FoActivity : AppCompatActivity(), FragmentHost {
         mFragmentManagerPrepared = false
     }
 
-    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         mFragmentManagerPrepared = false
-        super.onSaveInstanceState(outState, outPersistentState)
+        super.onRestoreInstanceState(savedInstanceState)
     }
 
     override fun onBackPressed() {

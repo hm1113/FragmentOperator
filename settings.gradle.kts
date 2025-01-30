@@ -19,6 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "FragmentOperatorDemo"
-include(":demo")
+rootProject.name = "FragmentOperatorDemo" //include(":demo")
 include(":FragmentOperator")
