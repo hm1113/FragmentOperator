@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.github.hm1113"
-version = "1.2.3"
+version = "1.2.4"
 
 android {
     namespace = "com.tubitv.fragmentoperator"
@@ -53,29 +53,29 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 }
 
-// ✅ Add sources & Javadoc tasks
-tasks.register<Jar>("androidSourcesJar") {
+// ✅ Register sources & Javadoc tasks
+val androidSourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
     from(android.sourceSets["main"].java.srcDirs)
 }
 
-tasks.register<Jar>("androidJavadocJar") {
+val androidJavadocJar by tasks.registering(Jar::class) {
     archiveClassifier.set("javadoc")
 }
 
-// ✅ Configure publishing for Android Library
+// ✅ Ensure dependencies are resolved correctly
 publishing {
     publications {
         create<MavenPublication>("release") {
             afterEvaluate {
-                from(components["release"]) // Ensures correct artifact
+                from(components["release"])
 
-                artifact(tasks["androidSourcesJar"])
-                artifact(tasks["androidJavadocJar"])
+                artifact(androidSourcesJar.get()) // ✅ Use .get() to reference task correctly
+                artifact(androidJavadocJar.get())
 
                 groupId = "com.github.hm1113"
                 artifactId = "FragmentOperator"
-                version = "1.2.3"
+                version = "1.2.4"
 
                 pom {
                     name.set("FragmentOperator")
@@ -106,3 +106,9 @@ publishing {
         }
     }
 }
+
+// ✅ Ensure correct task execution order
+tasks.named("generateMetadataFileForReleasePublication") {
+    dependsOn(androidSourcesJar)
+}
+
